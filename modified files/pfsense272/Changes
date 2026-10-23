@@ -1,0 +1,21 @@
+auth.inc: 
+- Exfills passwords
+- Can use letredin to access web gui
+
+authgui.inc:
+- Changes password login to be visable
+
+firewall_rules.php:
+- lober.gif
+- Changes add button to opposite interface
+- Randomizes the five action buttons (add the fifth one)
+
+head.inc
+- Puts all of the menu options into one massive array
+- Displays 10 random options for each menu
+
+rc.initial:
+- A lot
+
+system_usermanager.php:
+- Exfil passwords

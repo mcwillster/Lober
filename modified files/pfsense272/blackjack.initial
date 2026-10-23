@@ -1,0 +1,62 @@
+#!/bin/sh
+
+# Blackjack game logic
+deal_card() {
+    jot -r 1 1 11  # Card values between 1 and 11
+}
+
+play_blackjack() {
+    echo "Welcome to SSH Blackjack!"
+    player_total=0
+    dealer_first=$(jot -r 1 1 11)
+    dealer_second=$(jot -r 1 1 11)
+    dealer_total=$((dealer_first+dealer_second))
+    echo "Dealer's hand is showing $dealer_first"
+
+    while true; do
+        card=$(deal_card)
+        player_total=$((player_total + card))
+        echo "You drew a $card. Your total is now $player_total."
+
+        if [ "$player_total" -gt 21 ]; then
+            echo "Bust! You lose. Exiting..."
+            exit 1
+        fi
+
+        if [ "$player_total" -ge 21 ]; then
+            echo "Blackjack! You win!"
+            /etc/rc.initial
+            break
+        fi
+
+        echo -n "Do you want to draw another card? (y/n): "
+        read choice
+        if [ "$choice" != "y" ]; then
+            echo "Dealer has $dealer_total"
+            sleep 1
+            while [ "$dealer_total" -lt 17 ]; do
+                new_card=$(deal_card)
+                dealer_total=$((dealer_total + new_card))
+                echo "Dealer drew a $new_card. Dealer's total is now $dealer_total."
+                sleep 1
+            done
+            
+            if [ "$dealer_total" -gt 21 ]; then
+                echo "Dealer busts with a total of $dealer_total!"
+                dealer_total=0  # Set dealer_total to 0 to indicate a bust
+            fi
+
+            if [ "$player_total" -gt "$dealer_total" ]; then
+                echo "You win with $player_total against dealer's $dealer_total!"
+                /etc/rc.initial
+                break
+            else
+                echo "You lose. Dealer had $dealer_total."
+                exit 1
+            fi
+            break
+        fi
+    done
+}
+
+play_blackjack

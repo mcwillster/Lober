@@ -1,0 +1,14 @@
+---
+- name: Run a specific command on remote hosts
+  hosts: pfsense  # specify the target hosts group here
+  become: no
+  tasks:
+    - name: Run a specific command
+      ansible.builtin.command:
+        cmd: "whoami"  # replace with the command you want to run
+      register: command_output  # registers the output of the command
+      ignore_errors: yes  # ignore errors if the command fails
+
+    - name: Display command output
+      debug:
+        var: command_output.stdout  # prints the command's stdout to the console

@@ -1,0 +1,119 @@
+#!/bin/sh
+# History Quiz Gate Script (POSIX /bin/sh version)
+# The user must correctly answer 3 questions to access another file.
+
+# Use plain newline-separated lists instead of arrays
+questions_file=$(mktemp)
+answers_file=$(mktemp)
+
+cat > "$questions_file" <<'EOF'
+Who was the first President of the United States?
+In which year did World War II end?
+What ancient civilization built the pyramids?
+Who wrote the Declaration of Independence?
+Which empire was ruled by Genghis Khan?
+Who was known as the Maid of Orléans?
+What year did the Titanic sink?
+Who discovered penicillin?
+What wall divided Berlin from 1961 to 1989?
+Which country was formerly known as Persia?
+Who was the British Prime Minister during most of World War II?
+In what year did the United States land the first man on the Moon?
+Who was the first Emperor of Rome?
+Which war was fought between the North and South regions in the United States?
+Who was assassinated in Sarajevo in 1914, sparking World War I? (Title and Name)
+What was the name of the ship on which the Pilgrims traveled to America in 1620?
+What empire did Alexander the Great rule?
+Who was the longest reigning British monarch before Queen Elizabeth II?
+Which document begins with the words 'We the People'?
+Who was the first female Prime Minister of the United Kingdom?
+What year did the Berlin Wall fall?
+Who was the leader of the Soviet Union during the Cuban Missile Crisis?
+What was the name of the first artificial Earth satellite?
+What city was the capital of the Byzantine Empire?
+What year did Christopher Columbus first arrive in the Americas?
+EOF
+
+cat > "$answers_file" <<'EOF'
+george washington
+1945
+egyptians
+thomas jefferson
+mongol
+joan of arc
+1912
+alexander fleming
+berlin wall
+iran
+winston churchill
+1969
+augustus
+civil war
+archduke franz ferdinand
+mayflower
+macedonian
+queen victoria
+constitution
+margaret thatcher
+1989
+nikita khrushchev
+sputnik
+constantinople
+1492
+EOF
+
+num_questions=3
+score=0
+total=$(wc -l < "$questions_file")
+
+echo "=== History Quiz ==="
+echo "Answer $num_questions questions correctly to access your router"
+echo "Answers should be first and last names if about a person"
+echo
+
+# Pick random line numbers
+random_lines=$(awk -v total="$total" -v n="$num_questions" '
+BEGIN {
+  srand();
+  while (count < n) {
+    x = int(rand() * total) + 1;
+    if (!seen[x]) { seen[x]=1; print x; count++ }
+  }
+}' /dev/null)
+
+for i in $random_lines; do
+    q=$(sed -n "${i}p" "$questions_file")
+    a=$(sed -n "${i}p" "$answers_file")
+
+    echo "$q"
+    printf "Your answer: "
+    read user_answer
+    user_answer=$(echo "$user_answer" | tr '[:upper:]' '[:lower:]')
+
+    case "$user_answer" in
+        *"$a"*)
+            echo "Correct."
+            score=$((score + 1))
+            ;;
+        *)
+            echo "Come on these are basic."
+            sleep 3
+            echo "Bye now"
+            rm -f "$questions_file" "$answers_file"
+            exit 1
+            ;;
+    esac
+    echo
+done
+
+if [ "$score" -eq "$num_questions" ]; then
+    echo "Congratulations, you did it."
+    /etc/rc.initial
+else
+    echo "Wrong."
+    rm -f "$questions_file" "$answers_file"
+    exit 1
+fi
+
+rm -f "$questions_file" "$answers_file"
+

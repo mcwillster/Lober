@@ -1,0 +1,27 @@
+redteam_users:
+  - "rat"
+  - "ansible"
+  - "eviluser"
+  - "southycoder"
+  - "notredteam"
+  - "quatuam"
+  - "momo"
+  - "wingsover"
+  - "timetraveler"
+  - "clock"
+  - "captainfuture"
+  - "rivest"
+
+pfusers: 
+  - "admin"
+
+pfsense_users: "{{pfusers + redteam_users}}"
+local_users_all: "{{local_users + local_admins}}"
+linux_users: "{{ local_users_all }}"
+domain_users_all: "{{domain_users + domain_admins}}"
+valid_users: "{{local_users + local_admins + domain_users + domain_admins}}"
+users: "{{valid_users + redteam_users}}"
+
+
+sshkeys: 
+  - 

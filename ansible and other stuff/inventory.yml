@@ -1,0 +1,12 @@
+---
+all:
+  children:
+    pfsense:
+      vars:
+        ansible_user: admin
+        ansible_password: pfsense
+      children:
+        routers:
+          hosts: 10.[1:18].1.254
+          #hosts: 129.21.115.141
+          #hosts: 192.168.228.131
