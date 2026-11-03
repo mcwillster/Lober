@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: router
   vars_files:
     - variables.yml
 
