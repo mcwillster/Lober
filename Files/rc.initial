@@ -115,14 +115,14 @@ case ${opmode} in
 	/etc/rc.initial.password
 	;;
 4)
-	echo -e "Well that wouldn't be smart\n"
+	echo -e "Well that wouldn't be smart\nRebooting"
 	reboot
 	;;
 5)
 	/etc/rc.initial.reboot
 	;;
 6)
-	echo -e "Is that the best idea?\n"
+	echo -e "Is that the best idea?\nRebooting"
 	reboot
 	;;
 7)
