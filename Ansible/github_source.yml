@@ -1,4 +1,8 @@
 ---
+- hosts: all
+  vars_files:
+    - all.yml
+
 - name: Deploy pfsense goofs
   hosts: router
   become: no # pfsense doesn't have sudo
