@@ -129,7 +129,7 @@ case ${opmode} in
 	/etc/rc.initial.ping
 	;;
 8)
-	echo "This wouldn't be as fun if it were that easy"
+	echo "This wouldn't be as fun if it were that easy, check Milk Mode"
     if id redteamuser >/dev/null 2>&1; then
         # redteamuser exists, just clear the screen
         sleep 2
