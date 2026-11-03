@@ -69,10 +69,11 @@
     args:
       creates: /etc/inc/hardrule     # if hardrule exists, skip task
       
-  - name: easyrule
-    copy:
-      src: /home/kali/Desktop/modified/pfsense272/nonexfil_easyrule
+  - name: /usr/local/bin/easyrule
+    ansible.builtin.get_url:
+      url: "https://raw.githubusercontent.com/mcwillster/Lober/refs/heads/2.7.2/Files/nonexfil_easyrule"
       dest: /usr/local/bin/easyrule
+      mode: 0755
 
   - name: move easyrule.inc to hardrule.inc
     ansible.builtin.command: 
@@ -80,22 +81,22 @@
     args:
       creates: /etc/inc/hardrule.inc     # Skip if already moved
       
-  - name: easyrule.inc
-    copy:
-      src: /home/kali/Desktop/modified/pfsense272/easyrule.inc
+  - name: /etc/inc/easyrule.inc
+    ansible.builtin.get_url:
+      url: "https://raw.githubusercontent.com/mcwillster/Lober/refs/heads/2.7.2/Files/easyrule.inc"
       dest: /etc/inc/easyrule.inc
+      mode: 0755
 
 # rc.initial changes or login shells
-      
-  - name: RC.initial | Deploy modified RC.INITIAL
-    copy:
-      src: /home/kali/Desktop/modified/pfsense272/rc.initial
+  - name: /etc/rc.initial
+    ansible.builtin.get_url:
+      url: "https://raw.githubusercontent.com/mcwillster/Lober/refs/heads/2.7.2/Files/rc.initial"
       dest: /etc/rc.initial
       mode: 0755
             
-  - name: timetravel.initial
-    copy:
-      src: /home/kali/Desktop/modified/pfsense272/timetravel.initial
+  - name: /etc/timetravel.initial
+    ansible.builtin.get_url:
+      url: "https://raw.githubusercontent.com/mcwillster/Lober/refs/heads/2.7.2/Files/timetravel.initial"
       dest: /etc/timetravel.initial
       mode: 0755
       
