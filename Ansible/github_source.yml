@@ -1,6 +1,6 @@
 ---
 - name: Deploy pfsense goofs
-  hosts: pfsense
+  hosts: router
   become: no # pfsense doesn't have sudo
   tasks:
 
