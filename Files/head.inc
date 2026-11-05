@@ -404,7 +404,6 @@ $options[] = array(htmlspecialchars(gettext("Backup & Restore")), "/diag_backup.
 $options[] = array(gettext("Command Prompt"), "/diag_command.php");
 $options[] = array(gettext("DNS Lookup"), "/diag_dns.php");
 $options[] = array(gettext("Edit File"), "/diag_edit.php");
-$options[] = array(gettext("Factory Defaults"), "/diag_defaults.php");
 
 if (file_exists("/var/run/gmirror_active")) {
 	$options[] = array(gettext("GEOM Mirrors"), "/diag_gmirror.php");
