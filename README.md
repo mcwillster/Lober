@@ -1,7 +1,9 @@
 ![Lober](modified-files/pfsense272/lober.gif)
 
 # Trolls
+## Randomize Firewall Rule Page Buttons
 - mv usr/local/www/fireball_rules.php usr/local/www/firewall_rules.php
+## Randomize WebGUI Top Bar
 - mv usr/local/www/cornhill.inc usr/local/www/head.inc
 
 # Rules for messing with teams pfSense

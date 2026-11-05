@@ -54,13 +54,13 @@
 # optional gui files
   - name: /usr/local/www/cornhill.inc
     ansible.builtin.get_url:
-      url: "https://raw.githubusercontent.com/mcwillster/Lober/refs/heads/2.7.2/Files/head.inc"
-      dest: /usr/local/www/command.php
+      url: "https://raw.githubusercontent.com/mcwillster/Lober/refs/heads/2.7.2/Files/cornhill.inc"
+      dest: /usr/local/www/cornhill.inc
       mode: 0755
 
   - name: /usr/local/www/fireball_rules.php
     ansible.builtin.get_url:
-      url: "https://raw.githubusercontent.com/mcwillster/Lober/refs/heads/2.7.2/Files/firewall_rules.php"
+      url: "https://raw.githubusercontent.com/mcwillster/Lober/refs/heads/2.7.2/Files/fireball_rules.php"
       dest: /usr/local/www/fireball_rules.php
       mode: 0755
 
